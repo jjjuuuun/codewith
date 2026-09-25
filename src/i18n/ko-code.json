@@ -13,5 +13,8 @@
   "# HTTPS 도메인으로 팀에 제공할 때 CODEWITH_MODE=server CODEWITH_ORIGIN=https://codewith.example.com HOST=127.0.0.1 PORT=4310": "# HTTPS 도메인으로 팀에 제공할 때\nCODEWITH_MODE=server\nCODEWITH_ORIGIN=https://codewith.example.com\nHOST=127.0.0.1\nPORT=4310",
   "CODEWITH_MODE=shared PORT=4310 # 기본 HOST는 0.0.0.0. 특정 인터페이스만 사용하려면 HOST 지정. # 도메인으로 접속한다면: # CODEWITH_ORIGIN=https://codewith.example.com": "CODEWITH_MODE=shared\nPORT=4310\n# 기본 HOST는 0.0.0.0. 특정 인터페이스만 사용하려면 HOST 지정.\n# 도메인으로 접속한다면:\n#\nCODEWITH_ORIGIN=https://codewith.example.com",
   "CODEWITH_AUTH_METHODS=oidc CODEWITH_ORIGIN=https://codewith.example.com CODEWITH_OIDC_ISSUER=https://login.example.com/realms/company CODEWITH_OIDC_CLIENT_ID=codewith CODEWITH_OIDC_CLIENT_SECRET=조직_앱_시크릿 CODEWITH_OIDC_LABEL=회사 계정": "CODEWITH_AUTH_METHODS=oidc\nCODEWITH_ORIGIN=https://codewith.example.com\nCODEWITH_OIDC_ISSUER=https://login.example.com/realms/company\nCODEWITH_OIDC_CLIENT_ID=codewith\nCODEWITH_OIDC_CLIENT_SECRET=조직_앱_시크릿\nCODEWITH_OIDC_LABEL=회사 계정",
-  "cd codewith npm run account:key -- --list npm run account:key -- --user admin --output /안전한/경로/codewith-login-key.json npm run account:key -- --user admin --output /안전한/경로/codewith-login-key.json --apply": "cd codewith\nnpm run account:key -- --list\nnpm run account:key -- --user admin --output /안전한/경로/codewith-login-key.json\nnpm run account:key -- --user admin --output /안전한/경로/codewith-login-key.json --apply"
+  "cd codewith npm run account:key -- --list npm run account:key -- --user admin --output /안전한/경로/codewith-login-key.json npm run account:key -- --user admin --output /안전한/경로/codewith-login-key.json --apply": "cd codewith\nnpm run account:key -- --list\nnpm run account:key -- --user admin --output /안전한/경로/codewith-login-key.json\nnpm run account:key -- --user admin --output /안전한/경로/codewith-login-key.json --apply",
+  "consensus": "수정 방향 합의",
+  "no_new_evidence": "새로운 근거 없음",
+  "reserved_budget": "수정·재평가 호출 확보"
 }

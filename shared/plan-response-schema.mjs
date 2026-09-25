@@ -41,7 +41,11 @@ const review = (rubric) =>
       }),
     },
   });
-export function planResponseSchema(isReview = false, rubric = PLAN_RUBRIC) {
+export function planResponseSchema(
+  isReview = false,
+  rubric = PLAN_RUBRIC,
+  isDiscussion = false,
+) {
   return {
     ...outputSchema,
     properties: {
@@ -50,7 +54,20 @@ export function planResponseSchema(isReview = false, rubric = PLAN_RUBRIC) {
         type: "array",
         items: object({
           path: { type: "string" },
-          content: { anyOf: [isReview ? review(rubric) : plan, questions] },
+          content: {
+            anyOf: [
+              isDiscussion
+                ? object({
+                    ready: { type: "boolean" },
+                    newEvidence: { type: "boolean" },
+                    unresolved: strings,
+                  })
+                : isReview
+                  ? review(rubric)
+                  : plan,
+              questions,
+            ],
+          },
         }),
       },
     },

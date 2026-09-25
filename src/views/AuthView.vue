@@ -38,7 +38,7 @@ const labels = {
 </script>
 <template>
   <div class="auth-shell">
-    <div class="auth-theme"><ThemeControl /></div>
+    <div class="auth-theme row"><ThemeControl /></div>
     <section class="auth-story">
       <a
         class="brand"

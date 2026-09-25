@@ -21,7 +21,7 @@ ESLint uses JavaScript recommended and Vue essential rules. Unused action-adapte
 1. Update `package.json`, `package-lock.json`, `CHANGELOG.md`, `docs/release-notes.md`, and versioned installation examples.
 2. Run the same local gates as CI. `npm run release:bundle` requires a built frontend and the intended public files staged in Git.
 3. Push the reviewed commit to `main`; confirm CI is green.
-4. Tag that commit, for example `git tag -a v0.1.0 -m 'CodeWith 0.1.0'`, and push the tag.
+4. Tag that commit, for example `git tag -a v0.2.0 -m 'CodeWith 0.2.0'`, and push the tag.
 5. `release.yml` calls the complete CI workflow for that tag. It downloads the verified release candidate, checks tag/version agreement and SHA-256 hashes, publishes the npm tarball to GitHub Packages, and creates the GitHub release with the ZIP, tarball, and checksums.
 
 No manually stored npm token is required for CI publishing: the repository's short-lived `GITHUB_TOKEN` has `packages: write` in that job. The package is associated with the repository through package metadata. Check package visibility in GitHub after first publication; GitHub Packages may initially create packages as private. Set it to public for the public distribution.

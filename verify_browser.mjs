@@ -241,15 +241,18 @@ async function browserLogin() {
 }
 
 const extraApps = [];
-const deadline = setTimeout(() => {
-  proc.kill();
-  server.close();
-  console.error(
-    "Browser test timeout",
-    [...pending.values()].map((p) => p.method),
-  );
-  process.exit(1);
-}, 180000);
+const deadline = setTimeout(
+  () => {
+    proc.kill();
+    server.close();
+    console.error(
+      "Browser test timeout",
+      [...pending.values()].map((p) => p.method),
+    );
+    process.exit(1);
+  },
+  vite ? 300000 : 180000,
+);
 try {
   const target = await call(
     "Target.createTarget",
@@ -1618,6 +1621,98 @@ try {
     await closeSaved();
     await click('[data-action="plan-settings"]');
     await wait(`document.querySelector('#f-mode')`);
+    assert(
+      await ev(
+        `document.querySelector('#f-discussion').value === '사용 안 함'`,
+      ),
+      "토론은 기본 꺼짐",
+    );
+    assert(
+      await ev(`document.querySelector('#plan-discussion-options').hidden`),
+      "토론 끄면 검토자 설정 숨김",
+    );
+    await ev(
+      `document.querySelector('#f-discussion').scrollIntoView({block:'center'}); new Promise(r=>setTimeout(r,250))`,
+    );
+    await pointerClick(".v-select:has(#f-discussion) .v-field");
+    await wait(
+      `[...document.querySelectorAll('[role=option]')].some(x=>x.textContent.trim()==='사용')`,
+    );
+    await ev(
+      `[...document.querySelectorAll('[role=option]')].find(x=>x.textContent.trim()==='사용').click()`,
+    );
+    await wait(`!document.querySelector('#plan-discussion-options').hidden`);
+    await ev(
+      `document.querySelector('#f-discussionReviewers').scrollIntoView({block:'center'}); new Promise(r=>setTimeout(r,250))`,
+    );
+    await pointerClick(".v-select:has(#f-discussionReviewers) .v-field");
+    await wait(
+      `[...document.querySelectorAll('[role=option]')].some(x=>x.textContent.trim()==='3')`,
+    );
+    await ev(
+      `[...document.querySelectorAll('[role=option]')].find(x=>x.textContent.trim()==='3').click()`,
+    );
+    await wait(`!document.querySelector('#plan-discussion-reviewer-2').hidden`);
+    assert(
+      await ev(`document.querySelector('#f-reviewers').value === '2'`),
+      "토론 검토자 수 변경은 최종 평가자 수를 바꾸지 않음",
+    );
+    await submit();
+    await closeSaved();
+    await click('[data-action="plan-settings"]');
+    await wait(`document.querySelector('#f-discussion')?.value === '사용'`);
+    assert(
+      await ev(
+        `document.querySelector('#f-discussionReviewers').value === '3' && document.querySelector('#f-reviewers').value === '2' && !document.querySelector('#plan-discussion-reviewer-2').hidden && !!document.querySelector('#f-discussionReviewer2').value`,
+      ),
+      "토론 인원과 모델을 최종 평가자와 별도로 저장",
+    );
+    for (const width of [1440, 390]) {
+      await call("Emulation.setDeviceMetricsOverride", {
+        width,
+        height: 950,
+        deviceScaleFactor: 1,
+        mobile: width === 390,
+      });
+      for (const mode of ["light", "dark"]) {
+        await ev(
+          `window.CodeWithTheme.set(${JSON.stringify(mode)}); document.querySelector('#f-discussionReviewers').scrollIntoView({block:'center'}); new Promise(r=>setTimeout(r,300))`,
+        );
+        assert(
+          await ev(
+            `(()=>{const d=document.querySelector('#modal');return d.scrollWidth<=d.clientWidth;})()`,
+          ),
+          `토론 검토자 설정 경계 ${width} ${mode}`,
+        );
+        const shot = await call("Page.captureScreenshot", { format: "png" });
+        fs.writeFileSync(
+          path.join(
+            os.tmpdir(),
+            `codewith-discussion-reviewers-${width}-${mode}.png`,
+          ),
+          Buffer.from(shot.data, "base64"),
+        );
+      }
+    }
+    await ev(`window.CodeWithTheme.set('light')`);
+    await call("Emulation.setDeviceMetricsOverride", {
+      width: 1440,
+      height: 1050,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
+
+    await ev(
+      `document.querySelector('#f-discussion').scrollIntoView({block:'center'}); new Promise(r=>setTimeout(r,250))`,
+    );
+    await pointerClick(".v-select:has(#f-discussion) .v-field");
+    await wait(
+      `[...document.querySelectorAll('[role=option]')].some(x=>x.textContent.trim()==='사용 안 함')`,
+    );
+    await ev(
+      `[...document.querySelectorAll('[role=option]')].find(x=>x.textContent.trim()==='사용 안 함').click()`,
+    );
+    await wait(`document.querySelector('#plan-discussion-options').hidden`);
     assert(
       await ev(
         `!document.querySelector('#f-targetScore') && document.querySelector('#modal').textContent.includes('워크스페이스 공통 설정')`,
@@ -4753,7 +4848,12 @@ try {
       },
     });
     await click('[data-action="access-passkey-register"]');
-    await wait(`!!document.querySelector('#f-profileName')`);
+    // First-use WebAuthn module loading can exceed the generic 5s UI timeout.
+    await wait(
+      `!!document.querySelector('#f-profileName')`,
+      "패스키 등록 후 이름 설정",
+      30000,
+    );
     await fill("profileName", "패스키 사용자");
     await submit();
     await closeSaved();
@@ -4767,7 +4867,11 @@ try {
       `!!document.querySelector('[data-action="access-passkey-login"]')`,
     );
     await click('[data-action="access-passkey-login"]');
-    await wait(`!!document.querySelector('.workspace-home')`);
+    await wait(
+      `!!document.querySelector('.workspace-home')`,
+      "패스키 재로그인",
+      30000,
+    );
     assert(
       pass.app.store.db.users.length === 1,
       "가상 인증기의 실제 서명으로 패스키 재로그인",

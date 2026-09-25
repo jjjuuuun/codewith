@@ -23,6 +23,7 @@ export const defaultPlanSettings = {
   ...PLAN_DEFAULTS,
   agents: [],
   judges: [],
+  discussionAgents: [],
 };
 const fail = (message) => {
   throw Object.assign(new Error(message), { status: 400 });
@@ -76,6 +77,9 @@ export function validatePlanSettings(value = {}) {
   if (!s.adaptive && s.timeoutSeconds === 600)
     s.timeoutSeconds = defaultPlanSettings.timeoutSeconds;
   if (typeof s.adaptive !== "boolean") fail("계획 실행 설정을 확인하세요.");
+  if (typeof s.discussion !== "boolean") fail("토론 사용 여부를 확인하세요.");
+  if (s.discussion && (!s.loop || !s.adaptive))
+    fail("토론은 적응형 계획 루프에서 사용할 수 있습니다.");
   if (typeof s.loop !== "boolean") fail("계획 반복 설정을 확인하세요.");
   if (s.loop && s.mode === "single") s.mode = "review";
   if (value.maxCalls == null)
@@ -85,6 +89,7 @@ export function validatePlanSettings(value = {}) {
   for (const [key, min, max] of [
     ["writers", PLAN_POLICY.writersMin, PLAN_POLICY.writersMax],
     ["reviewers", 1, PLAN_POLICY.reviewersMax],
+    ["discussionReviewers", 1, PLAN_POLICY.discussionReviewersMax],
     ["rounds", 0, PLAN_POLICY.roundsMax],
     ["targetScore", 1, 100],
     ["maxCalls", 1, PLAN_POLICY.callsMax],
@@ -96,12 +101,12 @@ export function validatePlanSettings(value = {}) {
   ])
     if (!Number.isInteger(s[key]) || s[key] < min || s[key] > max)
       fail("계획 실행 인원·반복·한도를 확인하세요.");
-  for (const key of ["agents", "judges"]) {
-    if (
-      !Array.isArray(s[key]) ||
-      s[key].length >
-        (key === "agents" ? PLAN_POLICY.writersMax : PLAN_POLICY.reviewersMax)
-    )
+  for (const [key, max] of [
+    ["agents", PLAN_POLICY.writersMax],
+    ["judges", PLAN_POLICY.reviewersMax],
+    ["discussionAgents", PLAN_POLICY.discussionReviewersMax],
+  ]) {
+    if (!Array.isArray(s[key]) || s[key].length > max)
       fail("계획 모델 구성을 확인하세요.");
     s[key] = s[key].map((a) => {
       if (

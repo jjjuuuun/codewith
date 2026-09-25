@@ -81,6 +81,49 @@ for (const databaseUrl of [undefined, "sqlite:plans.sqlite"])
         await c("/ai/finish", {});
         const options = await c("/ai/plan-models");
         assert(options.value.models.some((m) => m.model === "test-codex"));
+        const discussionSettings = {
+          mode: "review",
+          adaptive: true,
+          discussion: true,
+          reviewers: 1,
+          judges: [{ provider: "codex", model: "test-codex" }],
+          discussionReviewers: 3,
+          discussionAgents: Array(3).fill({
+            provider: "codex",
+            model: "test-codex",
+          }),
+        };
+        assert.equal(
+          (await c("/ai/plan-settings", discussionSettings)).status,
+          200,
+        );
+        const savedDiscussion = (await c("/ai/plan-settings")).value.settings;
+        assert.equal(savedDiscussion.discussionReviewers, 3);
+        assert.equal(savedDiscussion.reviewers, 1);
+        assert.deepEqual(
+          savedDiscussion.discussionAgents,
+          discussionSettings.discussionAgents,
+        );
+        assert.deepEqual(savedDiscussion.judges, discussionSettings.judges);
+        const missingDiscussion = {
+          ...discussionSettings,
+          discussionAgents: [
+            { provider: "codex", model: "missing-discussion-model" },
+          ],
+        };
+        assert.equal(
+          (await c("/ai/plan-settings", missingDiscussion)).status,
+          400,
+        );
+        assert.equal(
+          (
+            await c("/ai/plan-settings", {
+              ...missingDiscussion,
+              discussion: false,
+            })
+          ).status,
+          200,
+        );
         assert.equal(
           (await c("/ai/plan-settings", { mode: "compare", maxCalls: 2 }))
             .status,

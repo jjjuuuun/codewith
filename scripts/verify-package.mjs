@@ -9,9 +9,7 @@ const pkg = JSON.parse(fs.readFileSync(path.join(root, "package.json")));
 const tarball = path.join(
   root,
   "release",
-  fs
-    .readdirSync(path.join(root, "release"))
-    .find((name) => name.endsWith(".tgz")),
+  `${pkg.name.replace(/^@/, "").replace("/", "-")}-${pkg.version}.tgz`,
 );
 for (const format of ["npm", "zip"]) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "codewith-install-"));

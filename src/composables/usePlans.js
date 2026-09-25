@@ -488,6 +488,22 @@ export function usePlans({
           "목표 점수와 배점은 명세의 평가 기준 → 워크스페이스 공통 설정 → 시스템 기본값 순으로 적용됩니다. 계획 탭의 평가 기준 또는 공통 설정과 스킬 사이의 평가 기준에서 변경하세요.",
         ),
       ),
+      ...selectField(
+        __t("에이전트 토론"),
+        "discussion",
+        [
+          ["false", __t("사용 안 함")],
+          ["true", __t("사용")],
+        ],
+        String(config.discussion),
+      ),
+      h(
+        "p",
+        { class: "muted" },
+        __t(
+          "작성자와 토론 검토자가 쟁점을 자유롭게 논의합니다. 합의·새 근거 없음·호출 예산에 따라 수정을 시작하며, 수정과 독립 재평가에 필요한 호출은 남겨둡니다.",
+        ),
+      ),
       ...field(__t("AI 호출 예산"), "maxCalls", config.maxCalls, "input", {
         type: "number",
         min: 2,
@@ -564,6 +580,39 @@ export function usePlans({
             ),
           ),
         ),
+        h("section", { id: "plan-discussion-options" }, [
+          h("h3", {}, __t("토론 검토자")),
+          ...selectField(
+            __t("토론 검토자 수"),
+            "discussionReviewers",
+            Array.from(
+              { length: PLAN_POLICY.discussionReviewersMax },
+              (_, i) => [String(i + 1), String(i + 1)],
+            ),
+            String(config.discussionReviewers),
+          ),
+          h(
+            "p",
+            { class: "muted" },
+            __t(
+              "작성자와 토론할 검토자입니다. 최종 평가자는 토론에 참여하지 않고 별도 세션에서 독립 채점합니다.",
+            ),
+          ),
+          ...Array.from(
+            { length: PLAN_POLICY.discussionReviewersMax },
+            (_, i) =>
+              h(
+                "div",
+                { id: `plan-discussion-reviewer-${i}` },
+                selectField(
+                  __t("토론 검토자 {0} 모델", [i + 1]),
+                  `discussionReviewer${i}`,
+                  choices,
+                  choice(config.discussionAgents, i) || fallback,
+                ),
+              ),
+          ),
+        ]),
         ...Array.from({ length: PLAN_POLICY.reviewersMax }, (_, i) =>
           h(
             "div",
@@ -601,8 +650,14 @@ export function usePlans({
         mode,
         loop: true,
         adaptive: true,
+        discussion: f.get("discussion") === "true",
         writers,
         reviewers,
+        discussionReviewers: Number(f.get("discussionReviewers")),
+        discussionAgents: Array.from(
+          { length: Number(f.get("discussionReviewers")) },
+          (_, i) => JSON.parse(f.get(`discussionReviewer${i}`)),
+        ),
         maxCalls: Number(f.get("maxCalls")),
         timeoutSeconds: Number(f.get("runMinutes")) * 60,
         targetScore: config.targetScore,
@@ -634,10 +689,21 @@ export function usePlans({
         editor.controls[`plan-judge-${i}`] = {
           hidden: mode === "single" || i >= reviewers,
         };
-      const flow = __t(
-        "계획 작성 → 독립 평가 → 지적 보완을 반복합니다. 필수 기준 충족·차단 문제 없음·명세 목표 점수 이상이면 승인 대기합니다. 호출 {0}회·실행 {1}분 예산 또는 개선 정체 시 최선의 계획과 마지막 시도를 보존하고 중단합니다.",
-        [editor.values.maxCalls, editor.values.runMinutes],
-      );
+      editor.controls["plan-discussion-options"] = {
+        hidden: editor.values.discussion !== "true",
+      };
+      for (let i = 0; i < PLAN_POLICY.discussionReviewersMax; i++)
+        editor.controls[`plan-discussion-reviewer-${i}`] = {
+          hidden: i >= Number(editor.values.discussionReviewers),
+        };
+      const flow =
+        (editor.values.discussion === "true"
+          ? __t("토론 후 계획을 수정하고 새 세션에서 독립 재평가합니다.") + " "
+          : "") +
+        __t(
+          "계획 작성 → 독립 평가 → 지적 보완을 반복합니다. 필수 기준 충족·차단 문제 없음·명세 목표 점수 이상이면 승인 대기합니다. 호출 {0}회·실행 {1}분 예산 또는 개선 정체 시 최선의 계획과 마지막 시도를 보존하고 중단합니다.",
+          [editor.values.maxCalls, editor.values.runMinutes],
+        );
       editors.setContent(
         "plan-mode-help",
         h(HelpTip, { text: flow, label: __t("진행 방식 설명") }),
@@ -645,6 +711,8 @@ export function usePlans({
     };
     for (const name of [
       "mode",
+      "discussion",
+      "discussionReviewers",
       "writers",
       "reviewers",
       "maxCalls",

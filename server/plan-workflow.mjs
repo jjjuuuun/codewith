@@ -125,10 +125,13 @@ export async function runPlanWorkflow({
     const executionSignal = sessionSignals.get(session) || signal;
     const previousFailure = sessionFailures.get(session);
     if (previousFailure) {
-      const correction =
-        "이 단계의 이전 응답이 실패했습니다: " +
-        previousFailure.detail +
-        "\n원래 출력 계약을 유지하고 오류를 바로잡으세요. files[].content에는 출력 스키마에 맞는 JSON 객체를 직접 넣으세요. JSON 문자열로 이중 직렬화하지 마세요. 코드의 따옴표·역슬래시·줄바꿈을 올바르게 이스케이프하고 요구사항 본문과 코드를 생략하지 마세요. 전체 계획을 새로 작성하지 말고 검사에서 지적한 부분만 수정하세요. 정상 요구사항과 정상 섹션은 그대로 유지하세요. 변경된 요구사항 파일만 반환해도 됩니다. 변경한 파일의 content는 필수 필드를 갖춘 완전한 객체로 반환하며, 앱이 반환하지 않은 요구사항은 기존 내용 그대로 유지합니다.";
+      const correction = prompt.startsWith("CODEWITH_PLAN_DISCUSSION")
+        ? "이전 토론 응답 오류: " +
+          previousFailure.detail +
+          "\n토론 출력 계약에 맞춰 message와 discussion.json만 반환하세요. 계획 파일이나 사용자 질문은 반환하지 마세요."
+        : "이 단계의 이전 응답이 실패했습니다: " +
+          previousFailure.detail +
+          "\n원래 출력 계약을 유지하고 오류를 바로잡으세요. files[].content에는 출력 스키마에 맞는 JSON 객체를 직접 넣으세요. JSON 문자열로 이중 직렬화하지 마세요. 코드의 따옴표·역슬래시·줄바꿈을 올바르게 이스케이프하고 요구사항 본문과 코드를 생략하지 마세요. 전체 계획을 새로 작성하지 말고 검사에서 지적한 부분만 수정하세요. 정상 요구사항과 정상 섹션은 그대로 유지하세요. 변경된 요구사항 파일만 반환해도 됩니다. 변경한 파일의 content는 필수 필드를 갖춘 완전한 객체로 반환하며, 앱이 반환하지 않은 요구사항은 기존 내용 그대로 유지합니다.";
       const boundary = prompt.indexOf("\n");
       prompt =
         boundary >= 0
@@ -199,7 +202,11 @@ export async function runPlanWorkflow({
       step.chars = Math.max(step.chars, step.responseChars);
       emit({ type: "plan-agent-response", ...step, text: result.text });
       answer = parse(result.text);
-      if (previousFailure?.answer && !prompt.startsWith("CODEWITH_PLAN_REVIEW"))
+      if (
+        previousFailure?.answer &&
+        !prompt.startsWith("CODEWITH_PLAN_REVIEW") &&
+        !prompt.startsWith("CODEWITH_PLAN_DISCUSSION")
+      )
         answer = mergePlanRepair(
           previousFailure.answer,
           answer,
@@ -228,7 +235,15 @@ export async function runPlanWorkflow({
       durationMs,
       message: `${stage} 응답 수신 완료`,
     });
-    const questions = validateAnswer(answer, () => planQuestions(answer));
+    const questions = validateAnswer(answer, () => {
+      const questions = planQuestions(answer);
+      if (questions && prompt.startsWith("CODEWITH_PLAN_DISCUSSION"))
+        throw problem(
+          "토론 중 부족한 정보는 사용자 질문 대신 미해결 쟁점으로 기록하세요.",
+          422,
+        );
+      return questions;
+    });
     if (questions) {
       if (!ask) throw new PlanQuestions(questions);
       if (followups >= runtime.planFollowupMaxCalls)

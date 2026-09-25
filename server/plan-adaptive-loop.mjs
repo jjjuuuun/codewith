@@ -1,3 +1,4 @@
+import { discussPlan } from "./plan-discussion.mjs";
 import { createHash } from "node:crypto";
 import { PLAN_RUBRIC, summarizeReviews } from "../shared/plan-workflow.mjs";
 import {
@@ -35,6 +36,7 @@ export async function runAdaptivePlanLoop({
       comparePlanProgress(summarize(b), summarize(a)),
     );
   const rounds = structuredClone((resumeState?.rounds || []).slice(-64));
+  const discussions = structuredClone(resumeState?.discussions || []);
   let bestCandidates = [];
   let bestEvaluatedAt;
   let best = null,
@@ -74,6 +76,7 @@ export async function runAdaptivePlanLoop({
         target: settings.targetScore,
         stopReason,
         rounds: structuredClone(rounds),
+        discussions: structuredClone(discussions),
         nextAction: rounds.at(-1)?.nextAction,
         checkpoint: {
           best: structuredClone(best),
@@ -89,6 +92,26 @@ export async function runAdaptivePlanLoop({
   }
   async function revise(round) {
     const baseline = best;
+    let discussion = null;
+    if (settings.discussion) {
+      discussion = { round, messages: [], stopReason: null };
+      discussions.push(discussion);
+      await discussPlan({
+        settings,
+        context,
+        criteria,
+        rubric,
+        baseline,
+        candidates,
+        call,
+        controlled,
+        agent,
+        usedCalls,
+        validateAnswer,
+        discussion,
+        checkpoint,
+      });
+    }
     for (let i = 0; i < candidates.length; i++) {
       // Every candidate branches from the best assessed plan, preserving improvements.
       candidates[i] = {
@@ -103,7 +126,7 @@ export async function runAdaptivePlanLoop({
           const changed = await call(
             `계획 개선 ${round + 1} · 후보 ${i + 1}`,
             { provider: c.provider, model: c.model },
-            `CODEWITH_PLAN_REVISION\n고정 명세·코드·지침: ${context}\n출력 계약: 기존 요구사항별 .html 경로를 유지하고 content 객체에 implementation, before, after, ui, mockup, database, verification 문자열을 반환한다.\n명세와 완료 기준·배점을 고정한다. 기존 기준을 낮추거나 삭제하지 않는다.\n${alternative ? "접근 변경: 같은 수정은 반복하지 않는다. 이전 시도가 지적을 해결하지 못한 원인을 분석하고, 제공된 코드 근거를 다시 조사하거나 다른 설계안·작업 분할을 적용한다. 새 접근과 선택 이유를 본문에 남긴다. 사용자만 알 수 있는 필수 정보가 없으면 questions.json으로 질문한다." : "미해결 완료 기준과 차단 문제를 우선 보완한다. 해결 위치와 검증 방법을 명시한다."}\n이전 시도 결과: ${JSON.stringify(rounds.slice(-4))}\n현재 최선의 계획: ${JSON.stringify(c.answer.files)}\n독립 평가 지적: ${JSON.stringify(baseline.reviews)}\nfiles에는 변경한 요구사항 파일만 반환할 수 있다. 변경한 본문과 코드는 완전하게 작성한다.`,
+            `CODEWITH_PLAN_REVISION\n고정 명세·코드·지침: ${context}\n출력 계약: 기존 요구사항별 .html 경로를 유지하고 content 객체에 implementation, before, after, ui, mockup, database, verification 문자열을 반환한다.\n명세와 완료 기준·배점을 고정한다. 기존 기준을 낮추거나 삭제하지 않는다.\n${alternative ? "접근 변경: 같은 수정은 반복하지 않는다. 이전 시도가 지적을 해결하지 못한 원인을 분석하고, 제공된 코드 근거를 다시 조사하거나 다른 설계안·작업 분할을 적용한다. 새 접근과 선택 이유를 본문에 남긴다. 사용자만 알 수 있는 필수 정보가 없으면 questions.json으로 질문한다." : "미해결 완료 기준과 차단 문제를 우선 보완한다. 해결 위치와 검증 방법을 명시한다."}\n이전 시도 결과: ${JSON.stringify(rounds.slice(-4))}\n현재 최선의 계획: ${JSON.stringify(c.answer.files)}\n독립 평가 지적: ${JSON.stringify(baseline.reviews)}${discussion ? "\n토론 기록 (합의는 평가 통과를 뜻하지 않음): " + JSON.stringify(discussion) : ""}\nfiles에는 변경한 요구사항 파일만 반환할 수 있다. 변경한 본문과 코드는 완전하게 작성한다.`,
             sessions[i],
           );
           validateAnswer(changed, () => {

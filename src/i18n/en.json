@@ -1875,5 +1875,20 @@
   "독립 앱에서 구현 완료 기록": "Record completion in the standalone app",
   "완료 기록은 사용자의 검증 보고입니다. 서버가 프로젝트 테스트를 대신 실행했다는 뜻은 아닙니다. 요구사항이나 최종 계획이 변경되면 이전 버전의 완료 요청은 거절됩니다.": "A completion record is the user’s verification report, not proof that the server ran project tests. Completion requests for outdated requirements or final plans are rejected.",
   "완료 상태는 요구사항 카드에서 검증 요약과 함께 기록합니다. 작성자·시각·요구사항 버전·계획 버전·코드 리비전을 이력에 남기며, 요구사항 변경 시 이전 완료 상태를 초기화합니다.": "Record completion with a verification summary on the requirement card. History includes the author, time, requirement version, plan version and code revision. Changing a requirement resets its previous completion status.",
-  "사용자가 계획을 적용할 수 있도록 파일 경로와 변경 종류, 적용에 필요한 전체 코드를 작성합니다. 길이를 이유로 코드나 import·설정·마이그레이션·테스트를 생략하지 않습니다. 출력 한도를 초과하면 명세를 나누어 다시 요청합니다. 언어를 지정한 코드 블록은 HTML 안에서 구문 색상으로 표시되며 다운로드에도 유지됩니다.": "Plans should include file paths, change types, and complete code needed for a user to apply them. Do not omit imports, configuration, migrations, or tests merely to shorten output. Split the specification if output limits are exceeded. Language-tagged code blocks retain syntax highlighting in HTML and downloads."
+  "사용자가 계획을 적용할 수 있도록 파일 경로와 변경 종류, 적용에 필요한 전체 코드를 작성합니다. 길이를 이유로 코드나 import·설정·마이그레이션·테스트를 생략하지 않습니다. 출력 한도를 초과하면 명세를 나누어 다시 요청합니다. 언어를 지정한 코드 블록은 HTML 안에서 구문 색상으로 표시되며 다운로드에도 유지됩니다.": "Plans should include file paths, change types, and complete code needed for a user to apply them. Do not omit imports, configuration, migrations, or tests merely to shorten output. Split the specification if output limits are exceeded. Language-tagged code blocks retain syntax highlighting in HTML and downloads.",
+  "에이전트 토론": "Agent discussion",
+  "사용 안 함": "Off",
+  "사용": "On",
+  "에이전트 토론 기록": "Agent discussion history",
+  "토론": "Discussion",
+  "미해결 쟁점": "Open issues",
+  "consensus": "Ready to revise",
+  "no_new_evidence": "No new evidence",
+  "reserved_budget": "Calls reserved for revision and evaluation",
+  "토론 후 계획을 수정하고 새 세션에서 독립 재평가합니다.": "After discussion, revise the plan and evaluate independently in fresh sessions.",
+  "작성자와 토론 검토자가 쟁점을 자유롭게 논의합니다. 합의·새 근거 없음·호출 예산에 따라 수정을 시작하며, 수정과 독립 재평가에 필요한 호출은 남겨둡니다.": "Writers and reviewers discuss open issues freely. Revision starts when they agree, have no new evidence, or reach the discussion budget. Calls are reserved for revision and independent evaluation.",
+  "토론 검토자": "Discussion reviewer",
+  "토론 검토자 수": "Discussion reviewer count",
+  "토론 검토자 {0} 모델": "Discussion reviewer {0} model",
+  "작성자와 토론할 검토자입니다. 최종 평가자는 토론에 참여하지 않고 별도 세션에서 독립 채점합니다.": "These reviewers discuss the plan with its writers. Final evaluators do not participate in discussion and score independently in separate sessions."
 }

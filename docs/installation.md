@@ -8,7 +8,7 @@ The first personal-mode launch is local-only at `http://127.0.0.1:4310`. App dat
 
 ## Release ZIP
 
-Extract the application ZIP, enter `codewith-0.1.0`, run `npm ci --omit=dev`, then `npm start`. The frontend is prebuilt; build tools and a separate IDE extension are unnecessary. This is a Node application distribution, not a native executable with Node included.
+Extract the application ZIP, enter `codewith-0.2.0`, run `npm ci --omit=dev`, then `npm start`. The frontend is prebuilt; build tools and a separate IDE extension are unnecessary. This is a Node application distribution, not a native executable with Node included.
 
 To verify downloads on Linux:
 
@@ -24,7 +24,7 @@ GitHub's npm registry requires authentication even for public packages. Use your
 
 ```sh
 npm login --scope=@jjjuuuun --auth-type=legacy --registry=https://npm.pkg.github.com
-npm install --global @jjjuuuun/codewith@0.1.0 --registry=https://npm.pkg.github.com
+npm install --global @jjjuuuun/codewith@0.2.0 --registry=https://npm.pkg.github.com
 mkdir my-codewith
 cd my-codewith
 codewith

@@ -34,12 +34,27 @@ _Real application screens with synthetic demonstration data. Example assessments
 
 ## How the planning loop works
 
+Version 0.2.0 adds optional agent discussion. In **Plan execution settings**, enable **Agent discussion** and choose discussion reviewers separately from final evaluators.
+
+| Role                 | Configuration and responsibility                                                                                               |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| Writers              | One writer for a single plan, or 2–4 for candidate comparison; draft and revise the plan.                                      |
+| Discussion reviewers | 1–3 reviewers with individually selected models; question assumptions, respond to writers, and identify unresolved issues.     |
+| Final evaluators     | Existing evaluator count and model settings; independently score the plan in fresh sessions without the discussion transcript. |
+
+Discussion has no fixed turn limit. Participants take turns until they agree to revise, a full cycle produces no new evidence, or the remaining call budget must be reserved for revision and evaluation. All calls share the existing call/time budgets. Discussion history and unresolved issues are saved with the plan.
+
+Discussion is off by default. Existing settings and saved plans remain compatible; missing discussion settings default to one reviewer using the currently selected AI model. The specification, scoring rubric, target and human approval requirements stay fixed.
+
 ```mermaid
 flowchart LR
     S[Specification + rubric] --> P[Generate or improve plan]
     P --> E[Evaluate criteria, blockers and score]
     E -->|Target met| H[Human review and approval]
-    E -->|Progress and budget remain| P
+    E -->|Progress and budget remain| D{Discussion enabled?}
+    D -->|Yes| T[Writers and discussion reviewers exchange evidence]
+    T --> P
+    D -->|No| P
     E -->|Stagnation, budget, error or user stop| R[Save best result and explain why]
     H --> I[Implement and verify in your chosen environment]
     I --> C[Record completion in CodeWith]
@@ -71,10 +86,10 @@ After editing source files, rebuild before using `npm start`. Use `.env.example`
 
 ## Install a release
 
-Download `codewith-0.1.0.zip` from [Releases](https://github.com/jjjuuuun/codewith/releases/tag/v0.1.0), extract it, then run:
+Download `codewith-0.2.0.zip` from [Releases](https://github.com/jjjuuuun/codewith/releases/tag/v0.2.0), extract it, then run:
 
 ```sh
-cd codewith-0.1.0
+cd codewith-0.2.0
 npm ci --omit=dev
 npm start
 ```
@@ -86,7 +101,7 @@ The release ZIP includes the built frontend, runtime source, lockfile, and defau
 The scoped npm package is published through **GitHub Packages**, not npmjs.org. GitHub requires registry authentication even for public npm packages; the release ZIP is available without registry authentication. See [package installation](docs/installation.md#github-packages).
 
 ```sh
-npm install --global @jjjuuuun/codewith@0.1.0 --registry=https://npm.pkg.github.com
+npm install --global @jjjuuuun/codewith@0.2.0 --registry=https://npm.pkg.github.com
 mkdir my-codewith
 cd my-codewith
 codewith

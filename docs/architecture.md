@@ -30,6 +30,16 @@ Actual implementation and project testing belong to the development environment 
 
 The completion endpoint remains an application API. It checks workspace permission, current document head, requirement version, approved plan identity, and plan freshness. Repeated identical completion events are idempotent. The browser uses this endpoint instead of directly modifying status in a document PATCH.
 
+## Planning discussion in 0.2.0
+
+`server/plan-adaptive-loop.mjs` coordinates drafting, independent evaluation, optional discussion and revision. `server/plan-discussion.mjs` runs a sequential conversation across all active writers and separately configured discussion reviewers. Each participant receives the current best plan, its assessment and the conversation so far.
+
+`discussion` enables the feature, `discussionReviewers` chooses the participant count, and `discussionAgents` assigns their provider/model pairs. These settings are separate from `reviewers` and `judges`, which remain the independent scoring configuration. Provider connections are checked before execution; disabled discussion roles are not required to connect.
+
+Participants report readiness, new evidence and unresolved issues. The orchestrator stops discussion on consensus, a full cycle without new evidence, or the call reserve required for revision and independent scoring. The overall execution deadline still applies. Discussion never modifies recorded scores. Each new scoring session receives candidates without the discussion transcript.
+
+Messages and stop reasons are checkpointed under `execution.loop.discussions`, displayed with plan history, and passed to the next revision. Existing plans without that field remain readable.
+
 ## Removed legacy coupling in 0.1.0
 
 - Removed the unused port-4311 local bridge and its separate identity/Claude wrapper.

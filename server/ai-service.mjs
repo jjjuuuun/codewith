@@ -578,6 +578,17 @@ export function createAIService({
             },
         ),
       );
+    if (config.discussion)
+      requested.push(
+        ...Array.from(
+          { length: config.discussionReviewers },
+          (_, i) =>
+            config.discussionAgents[i] || {
+              provider: active.provider,
+              model: active.model,
+            },
+        ),
+      );
     const connections = new Map(),
       catalogs = new Map();
     for (const a of requested) {
@@ -663,7 +674,10 @@ export function createAIService({
         ...(u.planSettings || {}),
         ...(b.evaluateOnly ? { mode: "review", rounds: 0 } : {}),
       }),
-      connections = await planConnections(u, config);
+      connections = await planConnections(
+        u,
+        b.evaluateOnly ? { ...config, discussion: false } : config,
+      );
     if (jobs.has(u.id)) throw problem("진행 중인 AI 응답이 있습니다.", 409);
     const selectionProject = {
       ...document.projectSpec,
@@ -916,6 +930,7 @@ export function createAIService({
             responseSchema: planResponseSchema(
               prompt.startsWith("CODEWITH_PLAN_REVIEW"),
               rubric,
+              prompt.startsWith("CODEWITH_PLAN_DISCUSSION"),
             ),
             ...opts,
             ...agent,

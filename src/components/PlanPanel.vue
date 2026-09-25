@@ -487,6 +487,40 @@ const legacy = computed(() =>
                   >
                 </p>
               </details>
+              <details
+                v-if="loop?.discussions?.length"
+                class="plan-detail"
+              >
+                <summary>{{ __t("에이전트 토론 기록") }}</summary>
+                <section
+                  v-for="discussion in loop.discussions"
+                  :key="discussion.round"
+                >
+                  <h4>
+                    {{ __t("토론") }} {{ discussion.round }} ·
+                    {{ __t(discussion.stopReason || "진행 중") }}
+                  </h4>
+                  <div
+                    v-for="(message, index) in discussion.messages"
+                    :key="index"
+                  >
+                    <b
+                      >{{
+                        __t(
+                          message.role === "writer" ? "작성자" : "토론 검토자",
+                        )
+                      }}
+                      {{ message.index + 1 }} · {{ message.provider }} /
+                      {{ message.model }}</b
+                    >
+                    <p class="discussion-message">{{ message.message }}</p>
+                    <p v-if="message.unresolved.length">
+                      {{ __t("미해결 쟁점") }}:
+                      {{ message.unresolved.join(" · ") }}
+                    </p>
+                  </div>
+                </section>
+              </details>
             </template>
           </PlanCriteriaStatus>
           <template v-if="evaluation">

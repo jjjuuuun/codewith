@@ -387,8 +387,9 @@
     left: 9px;
   }
   .auth-theme {
-    top: 18px;
-    right: 18px;
+    position: static;
+    justify-content: flex-end;
+    padding: 18px 18px 0;
   }
   .topbar .theme-control {
     flex: 0 0 34px;
