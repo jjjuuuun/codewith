@@ -1,0 +1,420 @@
+:root {
+  color-scheme: light;
+  --theme-surface: #fff;
+  --theme-raised: #ebebf2;
+  --theme-code: #eeeef3;
+  --theme-border: #dadae4;
+  --theme-text: #303044;
+  --theme-muted: #77778c;
+  --theme-accent: #6260b4;
+  --theme-on-accent: #fff;
+}
+.theme-control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--theme-muted);
+}
+.theme-control select {
+  appearance: auto;
+  width: 122px;
+  max-width: 100%;
+  height: 34px;
+  padding: 5px 6px 5px 30px;
+  border: 1px solid var(--theme-border);
+  border-radius: 10px;
+  background: var(--theme-surface);
+  color: var(--theme-text);
+  font: 12px system-ui;
+  cursor: pointer;
+}
+.theme-control select:focus-visible {
+  outline: 2px solid var(--theme-accent);
+  outline-offset: 2px;
+}
+.theme-icon {
+  display: none;
+  position: absolute;
+  left: 9px;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+:root[data-theme-mode="system"] .theme-system,
+:root[data-theme-mode="light"] .theme-light,
+:root[data-theme-mode="dark"] .theme-dark {
+  display: block;
+}
+.auth-theme {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  z-index: 5;
+}
+.auth-shell {
+  position: relative;
+}
+.theme-document-control {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px 0;
+  position: relative;
+  z-index: 2;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #171721;
+  --paper: #21212f;
+  --ink: #e7e7f2;
+  --muted: #a1a0b1;
+  --line: #353445;
+  --green: #b7b5f1;
+  --soft: #262538;
+  --orange: #dfac7f;
+  --theme-surface: #21212f;
+  --theme-raised: #222131;
+  --theme-code: #151420;
+  --theme-border: #3d3c50;
+  --theme-text: #e7e7f2;
+  --theme-muted: #a1a0b1;
+  --theme-accent: #b7b5f1;
+  --theme-on-accent: #22213b;
+  background: #171721;
+  color: #e7e7f2;
+}
+:root[data-theme="dark"] body {
+  background: #171721;
+  color: var(--ink);
+}
+:root[data-theme="dark"] :is(button, input, textarea, select, dialog) {
+  color: var(--ink);
+  border-color: var(--theme-border);
+  background: var(--paper);
+}
+:root[data-theme="dark"] :is(input, textarea)::placeholder {
+  color: #9695a5;
+  opacity: 1;
+}
+:root[data-theme="dark"] button:hover {
+  background: var(--soft);
+  border-color: #706f96;
+}
+:root[data-theme="dark"] :is(button.primary, .tabs button.active .step-circle) {
+  background: #b7b5f1;
+  border-color: #b7b5f1;
+  color: #22213b;
+}
+:root[data-theme="dark"] button.danger,
+:root[data-theme="dark"] :is(.error, .rich-error) {
+  color: #f1a59c;
+}
+:root[data-theme="dark"] button.ghost {
+  background: transparent;
+  border-color: transparent;
+}
+:root[data-theme="dark"] :is(a, .brand) {
+  color: var(--green);
+}
+:root[data-theme="dark"] :is(.brand, h1, h2, h3, h4) {
+  color: var(--ink);
+}
+:root[data-theme="dark"]
+  :is(
+    .card,
+    .metric,
+    .workspace-tile,
+    .home-step,
+    .home-blank,
+    .plan-view,
+    .rich-link-editor,
+    aside.assistant,
+    .compose-box,
+    .auth-box,
+    .spec-link.active,
+    .roles button.active
+  ) {
+  background: var(--paper);
+  border-color: var(--line);
+  box-shadow: none;
+}
+:root[data-theme="dark"] :is(.rail, .nav-handle, .auth-story) {
+  background: #171724;
+  border-color: var(--line);
+}
+:root[data-theme="dark"] .topbar {
+  background: #171721f2;
+  border-color: var(--line);
+}
+:root[data-theme="dark"] :is(.auth-shell, .auth-form) {
+  background: var(--bg);
+}
+:root[data-theme="dark"] .auth-box {
+  background: transparent;
+}
+:root[data-theme="dark"]
+  :is(
+    .workspace-switch,
+    .avatar,
+    .roles,
+    .step-circle,
+    .step-number,
+    .blank-icon,
+    .bar-row div,
+    .team-option,
+    .connect-steps > li::before
+  ) {
+  background: var(--theme-raised);
+  color: var(--ink);
+  border-color: var(--line);
+}
+:root[data-theme="dark"]
+  :is(.nav.active, .plan-version.active, .step-number.done) {
+  background: #2a2940;
+  color: #c8c7dc;
+  border-color: #61608a;
+}
+:root[data-theme="dark"]
+  :is(
+    .nav,
+    .spec-link,
+    .requirement-nav,
+    .workspace-open,
+    .tabs button,
+    .rich-menu button,
+    .roles button
+  ) {
+  background: transparent;
+}
+:root[data-theme="dark"]
+  :is(
+    .nav:hover,
+    .requirement-nav:hover,
+    .rich-menu button:hover,
+    .rich-menu [aria-selected="true"],
+    .workspace-option:hover
+  ) {
+  background: var(--soft);
+}
+:root[data-theme="dark"] .spec-link.active {
+  background: var(--theme-raised);
+}
+:root[data-theme="dark"]
+  :is(.pill, .bubble.assistant, .proposal, .resource-section > .inline-editor) {
+  background: #1c1c2b;
+  border-color: #3b3a50;
+  color: var(--ink);
+}
+:root[data-theme="dark"]
+  :is(.bubble.user, .note, .empty, .home-ai, .plan-final-note) {
+  background: #222134;
+  color: #bebdd0;
+  border-color: #43425b;
+}
+:root[data-theme="dark"] :is(.pill.accepted, .pill.verified, .pill.completed) {
+  background: #193a2b;
+  color: #a1e0b9;
+  border-color: #39644b;
+}
+:root[data-theme="dark"] .pill.pending {
+  background: #392623;
+  color: #f1aaa4;
+  border-color: #73504a;
+}
+:root[data-theme="dark"] :is(.pill.review, .pill.implementing) {
+  background: #372d21;
+  color: #edc397;
+  border-color: #705d40;
+}
+:root[data-theme="dark"]
+  :is(
+    .modal-foot,
+    .code-block header,
+    .rich-toolbar,
+    #command-menu,
+    .composer-models #model-select
+  ) {
+  background: #222131;
+  border-color: var(--line);
+  color: var(--muted);
+}
+:root[data-theme="dark"]
+  :is(pre, .code-block, .code-block pre, .ProseMirror pre) {
+  background: var(--theme-code);
+  border-color: var(--line);
+  color: #d7d7e5;
+}
+:root[data-theme="dark"]
+  :is(
+    .code-block code,
+    .markdown :not(pre) > code,
+    .ProseMirror :not(pre) > code
+  ) {
+  color: #c5c4d9;
+}
+:root[data-theme="dark"]
+  :is(.markdown :not(pre) > code, .ProseMirror :not(pre) > code) {
+  background: #272638;
+}
+:root[data-theme="dark"] :is(.ProseMirror blockquote, .markdown blockquote) {
+  color: #b5b4c8;
+  border-color: #69688b;
+}
+:root[data-theme="dark"] :is(.ProseMirror .rich-empty:before, .rich-add) {
+  color: #9998ac;
+}
+:root[data-theme="dark"]
+  :is(
+    .nav .symbol,
+    .status-nav .nav-identifier,
+    .empty-spec-list,
+    .plan-emblem,
+    .intro-points,
+    .auth-story p,
+    .auth-story > small,
+    .auth-intro > p:not(.eyebrow),
+    .home-blank p,
+    .home-description,
+    .home-kicker,
+    .home-step > span:last-child,
+    .home-ai p,
+    .home-spec p,
+    .auth-nav,
+    .instruction-card summary,
+    .connect-steps p,
+    .editor-toolbar button,
+    .applied-instructions,
+    .composer > small:last-child,
+    .bubble.assistant .byline,
+    .rich-menu button > span:first-child
+  ) {
+  color: var(--muted);
+}
+:root[data-theme="dark"] :is(.completion-note, .flow-arrow) {
+  color: #a4cfaf;
+}
+:root[data-theme="dark"]
+  :is(
+    .rail-section,
+    .spec-tools,
+    .card .meta,
+    .requirement-nav-list,
+    .completion-note,
+    .step-footer,
+    .flow div,
+    .criteria li::before,
+    th,
+    td,
+    h2,
+    .hint
+  ) {
+  border-color: var(--line);
+}
+:root[data-theme="dark"] .criteria li::before {
+  color: #a4cfaf;
+}
+:root[data-theme="dark"] #toast {
+  background: #d4d4e3;
+  color: #191927;
+  box-shadow: 0 8px 30px #0005;
+}
+:root[data-theme="dark"] dialog::backdrop {
+  background: #050507aa;
+}
+:root[data-theme="dark"]
+  :is(input[type="checkbox"], .team-option input[type="checkbox"]) {
+  background: #36354b;
+  border-color: #6d6c8d;
+}
+:root[data-theme="dark"] input[type="checkbox"]:checked {
+  background: #b7b5f1;
+  border-color: #b7b5f1;
+}
+:root[data-theme="dark"] .team-option input[type="checkbox"]::before {
+  background: #e7e7f2;
+}
+:root[data-theme="dark"] .team-option input[type="checkbox"]:checked::before {
+  background: #181725;
+}
+:root[data-theme="dark"] .connection-light {
+  background: #6ed79a;
+  box-shadow: 0 0 0 3px #6ed79a19;
+}
+:root[data-theme="dark"] .state-icon.pending circle {
+  fill: #e98681;
+}
+:root[data-theme="dark"] .state-icon.completed circle {
+  fill: #55ad7b;
+}
+:root[data-theme="dark"] #chat-resizer::after {
+  background: #535274;
+}
+:root[data-theme="dark"] th {
+  background: var(--theme-raised);
+}
+:root[data-theme="dark"] body > aside {
+  background: var(--theme-raised) !important;
+}
+:root[data-theme="dark"] :is(.tag, .status, footer) {
+  color: var(--muted);
+}
+:root[data-theme="dark"] .status {
+  background: var(--theme-raised);
+}
+:root[data-theme="dark"] .loader:before {
+  border-color: #373652;
+  border-top-color: #a7a5cf;
+}
+:root[data-theme="dark"] ::selection {
+  background: #43426e;
+  color: #f2f2f7;
+}
+@media (max-width: 700px) {
+  .theme-control select {
+    width: 34px;
+    padding: 0;
+    appearance: none;
+    color: transparent;
+  }
+  .theme-control option {
+    color: var(--theme-text);
+    font-size: 14px;
+  }
+  .theme-control .theme-icon {
+    left: 9px;
+  }
+  .auth-theme {
+    top: 18px;
+    right: 18px;
+  }
+  .topbar .theme-control {
+    flex: 0 0 34px;
+  }
+}
+@media (forced-colors: active) {
+  .theme-control select {
+    color: CanvasText;
+  }
+  .theme-control .theme-icon {
+    display: none;
+  }
+  .theme-control select {
+    width: 100px;
+    padding: 4px;
+  }
+  :root[data-theme="dark"]
+    :is(input[type="checkbox"], .team-option input[type="checkbox"]) {
+    background: Canvas;
+    border-color: ButtonText;
+  }
+  :root[data-theme="dark"] .connection-light {
+    background: Highlight;
+  }
+}
+:root[data-theme="dark"] table {
+  background: var(--paper);
+  color: var(--ink);
+}

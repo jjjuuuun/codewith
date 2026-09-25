@@ -1,0 +1,306 @@
+/* Retain CodeWith's spacing, typography and palette on Vuetify primitives. */
+.v-application {
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.65;
+  background: var(--bg);
+  color: var(--ink);
+}
+.v-application__wrap {
+  min-height: 100dvh;
+}
+.cw-icon {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+button.cw-button {
+  height: auto;
+  min-height: 0;
+  min-width: 0;
+  padding: 8px 12px;
+  font: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  white-space: normal;
+}
+button.cw-button .v-btn__content {
+  white-space: inherit;
+  min-width: 0;
+  gap: inherit;
+}
+button.cw-button .v-btn__overlay,
+button.cw-button .v-btn__underlay {
+  display: none;
+}
+button.cw-button:hover {
+  background: var(--soft);
+  border-color: #aeadc3;
+}
+button.cw-button.primary {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--theme-on-accent);
+}
+button.cw-button.ghost {
+  border-color: transparent;
+  background: transparent;
+}
+button.cw-button.danger {
+  color: #a34b45;
+}
+button.cw-button.small {
+  font-size: 12px;
+  padding: 4px 9px;
+}
+button.cw-button.nav,
+button.cw-button.spec-link,
+button.cw-button.requirement-nav,
+button.cw-button.workspace-switch,
+button.cw-button.workspace-option,
+button.cw-button.profile-settings {
+  display: flex;
+  justify-content: stretch;
+  text-align: left;
+  width: 100%;
+}
+button.cw-button:is(
+    .nav,
+    .spec-link,
+    .requirement-nav,
+    .workspace-switch,
+    .workspace-option,
+    .profile-settings
+  )
+  > .v-btn__content {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  gap: inherit;
+  align-items: center;
+  justify-content: inherit;
+}
+button.cw-button.nav {
+  padding: 10px 11px;
+  font-size: 13px;
+  border-color: transparent;
+  background: transparent;
+}
+button.cw-button.active {
+  background: var(--soft);
+  color: var(--green);
+}
+button.cw-button.status-nav {
+  border-color: transparent;
+  background: transparent;
+  padding: 7px 8px;
+}
+button.cw-button.status-nav.active {
+  background: var(--soft);
+}
+button.cw-button.workspace-switch {
+  justify-content: space-between;
+}
+button.cw-button.workspace-option {
+  border-color: transparent;
+  justify-content: space-between;
+}
+button.cw-button.profile-settings {
+  border-color: transparent;
+}
+button.cw-button.send-button {
+  padding: 7px;
+}
+.tabs button.cw-button {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+.tabs button.cw-button.active {
+  border-bottom: 2px solid var(--green);
+}
+.tabs .v-btn__content {
+  gap: 7px;
+}
+.theme-control .v-input {
+  width: 130px;
+  font-size: 12px;
+}
+.v-select .v-field {
+  border-radius: 10px;
+  font-size: 12px;
+  color: var(--ink);
+  background: var(--paper);
+}
+.v-select input {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  min-height: 0;
+}
+.v-select .v-field__input {
+  padding: 6px 10px;
+  min-height: 34px;
+}
+.v-select .v-field__append-inner {
+  padding-top: 0;
+  align-items: center;
+}
+.v-select .v-field__outline {
+  color: var(--line);
+}
+.v-select .v-icon {
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.v-overlay-container .v-list {
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 16px;
+}
+.v-overlay-container .v-list-item {
+  font-size: 13px;
+}
+.model-controls .v-input {
+  min-width: 0;
+  flex: 1;
+}
+.composer-models .v-field__input {
+  font-size: 11px;
+  padding: 4px 6px;
+}
+.rich-input-host {
+  display: contents;
+}
+[hidden] {
+  display: none !important;
+}
+/* The workspace scrolls inside its panels; don't reserve a page scrollbar. */
+html {
+  overflow-y: auto;
+}
+@media (max-width: 600px) {
+  .shell:not(.home-layout) .topbar .row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .topbar .theme-control .v-input {
+    width: 100px;
+  }
+  .topbar button.cw-button.small {
+    padding: 4px 6px;
+  }
+}
+/* Vuetify's reset clears the native dialog's user-agent auto margins. */
+dialog {
+  margin: auto;
+}
+
+button.cw-button:is(.choice-card, .plan-version) > .v-btn__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  gap: 4px;
+}
+button.cw-button.personal-entry > .v-btn__content {
+  display: flex;
+  width: 100%;
+  gap: 14px;
+  text-align: left;
+}
+.modal-body .v-select {
+  margin-bottom: 12px;
+}
+
+button.cw-button.plan-version {
+  min-width: 135px;
+  padding: 11px 14px;
+}
+button.cw-button.plan-version :is(b, small) {
+  max-width: 100%;
+  flex-shrink: 0;
+}
+button.cw-button.choice-card {
+  padding: 22px;
+  border-radius: 12px;
+  text-align: left;
+}
+button.cw-button.personal-entry {
+  padding: 16px;
+  border-radius: 12px;
+}
+
+/* Multi-line cards must override Vuetify density's fixed button height. */
+button.cw-button:is(.choice-card, .plan-version, .personal-entry) {
+  height: auto;
+  min-height: 36px;
+}
+
+/* Let labels use their full height inside Vuetify's content wrapper. */
+button.cw-button:is(.workspace-switch, .workspace-option, .profile-settings) {
+  flex-shrink: 0;
+}
+.workspace-switch .v-btn__content > span:first-child,
+.workspace-option .v-btn__content > span:first-child {
+  min-width: 0;
+  flex: 1;
+}
+.workspace-switch .v-btn__content {
+  gap: 8px;
+}
+.workspace-switch small {
+  display: block;
+}
+.workspace-switch b {
+  max-width: 100%;
+}
+.workspace-option .v-btn__content {
+  gap: 8px;
+}
+.workspace-option .v-btn__content > span:last-child:not(:first-child) {
+  flex: none;
+}
+.cw-icon {
+  flex-shrink: 0;
+  line-height: 1;
+}
+.cw-icon svg {
+  display: block;
+}
+.workspace-switch .cw-icon {
+  transition: transform 0.18s;
+}
+.workspace-switch[aria-expanded="true"] .cw-icon {
+  transform: rotate(180deg);
+}
+.nav-handle {
+  display: grid;
+  place-items: center;
+}
+#toast {
+  width: max-content;
+  overflow-wrap: anywhere;
+}
+
+/* Override density height only; preserve state and theme color specificity. */
+button.cw-button.v-btn {
+  height: auto;
+}
+
+/* Stateful buttons share a visible selected/open treatment in both themes. */
+:root .v-btn.cw-button:is([aria-pressed="true"], [aria-expanded="true"]),
+:root button:is(.nav-handle, .help-tip-trigger)[aria-expanded="true"],
+:root .rich-toolbar button[aria-expanded="true"] {
+  background: color-mix(in srgb, var(--green) 20%, var(--paper));
+  color: var(--green);
+  border-color: var(--green);
+  font-weight: 700;
+}

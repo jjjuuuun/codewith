@@ -1,0 +1,39 @@
+node_modules/
+.codewith/
+.env
+*.log
+data/export-roundtrip.html
+dist/
+
+# Local configuration and exported login credentials
+.env.*
+!.env.example
+codewith-login-key.json
+
+# Regenerated browser verification artifacts
+data/screenshots/
+data/browser-verification.json
+
+# Machine-specific Claude preferences (shared instructions/skills stay tracked)
+CLAUDE.local.md
+.claude/settings.local.json
+
+# Operator runtime overrides (copy config/runtime.defaults.json if needed)
+config/runtime.local.json
+
+# Private runtime data and release staging
+data/
+.codewith-local/
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.sqlite
+*.sqlite-*
+*.db
+*.tgz
+release/
+.npmrc
+public/text-editor.js
+public/auth-wait.js

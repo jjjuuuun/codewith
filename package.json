@@ -1,0 +1,113 @@
+{
+  "name": "@jjjuuuun/codewith",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A self-hosted specification workspace with AI planning, evaluation loops and human review.",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server/index.mjs",
+    "dev": "node --env-file-if-exists=.env scripts/dev.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "node scripts/check.mjs",
+    "test:browser": "npm run build && node verify_browser.mjs",
+    "test:db": "node scripts/verify-databases.mjs",
+    "account:move": "node --env-file-if-exists=.env scripts/move-account.mjs",
+    "account:key": "node --env-file-if-exists=.env scripts/account-key.mjs",
+    "build:editor": "node scripts/build-editor.mjs",
+    "build": "npm run build:notices && npm run build:editor && vite build",
+    "dev:server": "node --env-file-if-exists=.env --watch server/index.mjs",
+    "prestart": "node scripts/prepare-start.mjs",
+    "test:browser:dev": "npm run build:editor && node verify_browser.mjs --dev",
+    "pretest": "npm run build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepack": "npm run build",
+    "test:browser:i18n": "node verify_browser.mjs --i18n",
+    "release:check": "node scripts/check-release.mjs",
+    "release:bundle": "node scripts/release-bundle.mjs",
+    "lint": "eslint . --max-warnings=0",
+    "test:package": "node scripts/verify-package.mjs",
+    "test:unit": "node --test tests/*.test.mjs",
+    "build:notices": "node scripts/build-notices.mjs"
+  },
+  "optionalDependencies": {
+    "mysql2": "^3.24.4"
+  },
+  "dependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.3.281",
+    "@simplewebauthn/browser": "^14.0.0",
+    "@simplewebauthn/server": "^14.0.2",
+    "esbuild": "^0.28.2",
+    "highlight.js": "^11.12.0",
+    "mammoth": "^1.12.3",
+    "markdown-it": "^14.3.2",
+    "nodemailer": "^10.0.10",
+    "openid-client": "^6.8.8",
+    "pdfjs-dist": "^6.3.289",
+    "pg": "^8.23.0",
+    "prosemirror-commands": "^1.7.2",
+    "prosemirror-history": "^1.5.0",
+    "prosemirror-inputrules": "^1.5.1",
+    "prosemirror-keymap": "^1.2.3",
+    "prosemirror-markdown": "^1.13.8",
+    "prosemirror-model": "^1.25.12",
+    "prosemirror-schema-list": "^1.5.1",
+    "prosemirror-state": "^1.4.4",
+    "prosemirror-view": "^1.42.5",
+    "vue": "^3.5.43",
+    "vuetify": "^3.13.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.5",
+    "@types/node": "24.13.6",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "eslint": "9.39.5",
+    "eslint-plugin-vue": "10.11.1",
+    "globals": "16.5.0",
+    "playwright": "1.63.0",
+    "prettier": "^3.9.8",
+    "vite": "^7.3.6"
+  },
+  "license": "MIT",
+  "author": "jjjuuuun",
+  "homepage": "https://github.com/jjjuuuun/codewith#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jjjuuuun/codewith.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jjjuuuun/codewith/issues"
+  },
+  "bin": {
+    "codewith": "bin/codewith.mjs"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "files": [
+    "bin/",
+    "server/",
+    "shared/",
+    "public/",
+    "dist/",
+    "src/styles/",
+    "skills/defaults/",
+    "templates/",
+    "config/runtime.defaults.json",
+    "config/runtime.example.json",
+    "config/README.md",
+    "scripts/prepare-start.mjs",
+    "scripts/account-key.mjs",
+    "scripts/move-account.mjs",
+    "README.ko.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "docs/",
+    ".env.example",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "THIRD_PARTY_NOTICES.md"
+  ]
+}

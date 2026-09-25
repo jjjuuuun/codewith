@@ -1,0 +1,63 @@
+{
+  "format": "codewith.exchange",
+  "version": 2,
+  "document": {
+    "schema": "codewith.spec.v2",
+    "project": "참가 등록 프로젝트",
+    "projectSpec": {
+      "purpose": "올바른 참가 등록",
+      "principles": ["원자적으로 등록한다."],
+      "constraints": ["Java 21"],
+      "instructions": "",
+      "skills": []
+    },
+    "specs": [
+      {
+        "id": "SPEC-REG",
+        "title": "참가 등록",
+        "subtitle": "",
+        "version": 1,
+        "status": "pending",
+        "decisions": "",
+        "codeScope": "",
+        "requirements": [
+          {
+            "id": "REG-001",
+            "title": "중복 등록 방지",
+            "body": "동일한 이메일은 한 번만 등록한다.",
+            "status": "pending",
+            "criteria": [
+              {
+                "id": "AC-001",
+                "text": "두 번째 요청은 중복 오류를 반환한다."
+              }
+            ],
+            "resources": [
+              {
+                "id": "REF-001",
+                "type": "table",
+                "title": "기대 결과",
+                "headers": ["입력", "결과"],
+                "rows": [
+                  ["최초", "성공"],
+                  ["중복", "거절"]
+                ]
+              }
+            ]
+          }
+        ],
+        "tasks": [
+          {
+            "id": "TASK-001",
+            "text": "중복 검증 구현",
+            "req": "REG-001",
+            "done": false
+          }
+        ],
+        "questions": [],
+        "evidence": []
+      }
+    ],
+    "files": {}
+  }
+}

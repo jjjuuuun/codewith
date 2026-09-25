@@ -1,0 +1,31 @@
+:root {
+  --plan-success: #166534;
+  --plan-warning: #92400e;
+  --plan-error: #b42318;
+}
+:root[data-theme="dark"] {
+  --plan-success: #86efac;
+  --plan-warning: #fcd34d;
+  --plan-error: #fca5a5;
+}
+[data-plan-tone="success"] {
+  --plan-tone: var(--plan-success);
+}
+[data-plan-tone="warning"] {
+  --plan-tone: var(--plan-warning);
+}
+[data-plan-tone="error"] {
+  --plan-tone: var(--plan-error);
+}
+[data-plan-tone="neutral"] {
+  --plan-tone: var(--muted);
+}
+:root [data-plan-tone].plan-status-surface {
+  color: var(--plan-tone);
+  background: color-mix(in srgb, var(--plan-tone) 9%, var(--paper));
+  border: 1px solid color-mix(in srgb, var(--plan-tone) 32%, var(--line));
+  border-radius: 10px;
+}
+:root [data-plan-tone].plan-status-text {
+  color: var(--plan-tone);
+}

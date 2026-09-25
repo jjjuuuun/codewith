@@ -1,0 +1,5 @@
+{
+  "planTimeoutSeconds": 1800,
+  "aiRequestTimeoutMs": 1800000,
+  "databaseConnectTimeoutMs": 10000
+}

@@ -1,0 +1,31 @@
+{
+  "format": "codewith.exchange",
+  "version": 2,
+  "document": {
+    "schema": "codewith.spec.v2",
+    "project": "프로젝트 이름",
+    "projectSpec": {
+      "purpose": "",
+      "principles": [],
+      "constraints": [],
+      "instructions": "",
+      "skills": []
+    },
+    "specs": [
+      {
+        "id": "SPEC-001",
+        "title": "개발 단위 이름",
+        "subtitle": "",
+        "version": 1,
+        "status": "pending",
+        "decisions": "",
+        "codeScope": "",
+        "requirements": [],
+        "tasks": [],
+        "questions": [],
+        "evidence": []
+      }
+    ],
+    "files": {}
+  }
+}

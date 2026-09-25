@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script src="/theme.js"></script>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1"
+    />
+    <meta
+      name="referrer"
+      content="no-referrer"
+    />
+    <title>로그인 준비 중 · CodeWith</title>
+    <script src="/branding.js"></script>
+    <style>
+      :root {
+        font-family:
+          Inter,
+          Pretendard,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        color: #26253b;
+        background: #f4f3f8;
+        font-synthesis: none;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
+        background:
+          radial-gradient(ellipse at 15% 12%, #e1e1ec 0, transparent 48%),
+          radial-gradient(ellipse at 90% 85%, #e7e7f0 0, transparent 48%);
+      }
+      header {
+        padding: 32px 40px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -1px;
+      }
+      header img {
+        width: 34px;
+        height: 34px;
+      }
+      main {
+        flex: 1;
+        display: grid;
+        place-items: center;
+        padding: 24px 24px 76px;
+      }
+      .card {
+        width: min(100%, 480px);
+        text-align: center;
+        border: 1px solid #dadae7;
+        border-radius: 28px;
+        background: #ffffffed;
+        padding: 48px 32px 32px;
+        box-shadow: 0 20px 70px #2a294b10;
+      }
+      .loader {
+        position: relative;
+        display: grid;
+        place-items: center;
+        width: 88px;
+        height: 88px;
+        margin: 0 auto 30px;
+      }
+      .loader img {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+      }
+      .loader:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border: 2px solid #e1e0ec;
+        border-top-color: #424077;
+        border-right-color: #8583ba;
+        border-radius: 50%;
+        animation: spin 1.6s linear infinite;
+      }
+      .eyebrow {
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        color: #6f6e83;
+        margin: 0 0 12px;
+        font-weight: 600;
+      }
+      h1 {
+        font-size: 27px;
+        letter-spacing: -1px;
+        margin: 0 0 16px;
+        line-height: 1.4;
+      }
+      p {
+        font-size: 14px;
+        color: #717080;
+        line-height: 1.85;
+        margin: 0;
+        word-break: keep-all;
+      }
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 26px 0 30px;
+        padding: 9px 16px;
+        border-radius: 50px;
+        background: #ededf3;
+        color: #4e4d71;
+        font-size: 12px;
+      }
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #646296;
+        animation: pulse 1.7s ease-in-out infinite;
+      }
+      .hint {
+        border-top: 1px solid #e8e8f0;
+        padding-top: 23px;
+        font-size: 12px;
+        color: #888894;
+      }
+      footer {
+        text-align: center;
+        padding: 0 24px 26px;
+        font-size: 12px;
+        color: #848397;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes pulse {
+        50% {
+          opacity: 0.35;
+        }
+      }
+      @media (max-width: 520px) {
+        header {
+          padding: 24px;
+        }
+        .card {
+          padding: 38px 24px 28px;
+          border-radius: 24px;
+        }
+        h1 {
+          font-size: 24px;
+        }
+        main {
+          padding: 16px 20px 48px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .loader:before,
+        .dot {
+          animation: none;
+        }
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="/theme.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/controls.css"
+    />
+    <script
+      src="/controls.js"
+      defer
+    ></script>
+    <script
+      type="module"
+      src="/auth-wait.js"
+    ></script>
+  </head>
+  <body>
+    <header>
+      <img
+        src="/logo.svg"
+        alt=""
+      />codewith
+    </header>
+    <main>
+      <section
+        class="card"
+        aria-labelledby="login-title"
+      >
+        <div
+          class="loader"
+          aria-hidden="true"
+        >
+          <img
+            src="/logo.svg"
+            alt=""
+          />
+        </div>
+        <p
+          class="eyebrow"
+          data-auth-message
+        >
+          잠시만 기다려 주세요
+        </p>
+        <h1
+          id="login-title"
+          data-auth-message
+        >
+          로그인을 준비하고 있어요
+        </h1>
+        <p data-auth-message>
+          선택한 AI 서비스에 연결하고 있습니다. 준비가 끝나면 인증 페이지로 자동
+          이동합니다.
+        </p>
+        <div
+          class="status"
+          role="status"
+        >
+          <span
+            class="dot"
+            aria-hidden="true"
+          ></span
+          ><span data-auth-message>인증 페이지 준비 중</span>
+        </div>
+        <p
+          class="hint"
+          data-auth-message
+        >
+          이 창에서 기다려 주세요. 취소하려면 창을 닫고 CodeWith로 돌아가세요.
+        </p>
+      </section>
+    </main>
+    <footer data-auth-message>CodeWith · 생각을 코드로 잇는 공간</footer>
+  </body>
+</html>

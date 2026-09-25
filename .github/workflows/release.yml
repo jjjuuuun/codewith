@@ -1,0 +1,89 @@
+name: Release
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag
+        required: true
+        type: string
+      validated_run_id:
+        description: Completed tag run whose six verification jobs passed
+        required: true
+        type: string
+concurrency:
+  group: release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  verify:
+    if: github.event_name != 'workflow_dispatch'
+    uses: ./.github/workflows/ci.yml
+  publish:
+    needs: verify
+    if: always() && (needs.verify.result == 'success' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      packages: write
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ inputs.tag || github.ref_name }}
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          registry-url: https://npm.pkg.github.com
+      - name: Verify recovery artifact provenance
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          SOURCE_RUN_ID: ${{ inputs.validated_run_id }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          node --input-type=module <<'JS'
+          import {execFileSync} from 'node:child_process';
+          const {GH_REPO:repo,SOURCE_RUN_ID:id,RELEASE_TAG:tag}=process.env;
+          if (!/^\d+$/.test(id) || !/^v\d+\.\d+\.\d+$/.test(tag)) throw Error('Invalid recovery input');
+          const api=path=>JSON.parse(execFileSync('gh',['api',`repos/${repo}/${path}`],{encoding:'utf8'}));
+          const run=api(`actions/runs/${id}`), sha=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+          if(run.head_sha!==sha || run.head_branch!==tag || run.event!=='push' || run.path!=='.github/workflows/release.yml' || run.status!=='completed') throw Error('Artifact run does not match the completed tag workflow');
+          const jobs=api(`actions/runs/${id}/jobs?per_page=100`).jobs;
+          const required=['Secret scan','Quality / Node 22','Quality / Node 24','PostgreSQL and MariaDB integration','Browser / production and development','Package installation and release candidate'];
+          if(!required.every(name=>jobs.some(job=>job.name===`verify / ${name}` && job.conclusion==='success'))) throw Error('All tag verification jobs must pass');
+          console.log('Verified artifact source:',tag,sha,id);
+          JS
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: release-candidate
+          path: release
+          run-id: ${{ inputs.validated_run_id || github.run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify version and checksums
+        env:
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          node --input-type=module -e 'import fs from "node:fs"; const p=JSON.parse(fs.readFileSync("package.json")); if (process.env.RELEASE_TAG !== `v${p.version}`) throw Error("Tag/package version mismatch");'
+          cd release
+          sha256sum -c SHA256SUMS
+      - name: Publish validated npm tarball
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm publish ./release/*.tgz --ignore-scripts --access=public --registry=https://npm.pkg.github.com
+      - name: Create release with validated assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+          GH_REPO: ${{ github.repository }}
+        run: gh release create "$RELEASE_TAG" release/*.tgz release/*.zip release/SHA256SUMS --verify-tag --title "CodeWith $RELEASE_TAG" --notes-file docs/release-notes.md
+      - name: Report package visibility
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PACKAGE_OWNER: ${{ github.repository_owner }}
+        run: gh api "users/$PACKAGE_OWNER/packages/npm/codewith" --jq '{visibility,html_url}'
